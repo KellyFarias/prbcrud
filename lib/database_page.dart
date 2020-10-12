@@ -43,13 +43,13 @@ class DatabasePage extends StatefulWidget {
 class _DatabasePageState extends State<DatabasePage> {
   int _counter;
   DatabaseReference _counterRef;
-  DatabaseReference _messagesRef;
+  DatabaseReference _messagesRef, _usersRef;
   StreamSubscription<Event> _counterSubscription;
   StreamSubscription<Event> _messagesSubscription;
   bool _anchorToBottom = false;
 
   String _kTestKey = 'Hello';
-  String _kTestValue = 'world!';
+  String _kTestValue = 'world!', _search;
   DatabaseError _error;
 
   @override
@@ -60,6 +60,7 @@ class _DatabasePageState extends State<DatabasePage> {
     // Demonstrates configuring the database directly
     final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
     _messagesRef = database.reference().child('messages');
+    _usersRef = database.reference().child('usuarios');
     database.reference().child('counter').once().then((DataSnapshot snapshot) {
       print('Connected to second database and read ${snapshot.value}');
     });
@@ -86,6 +87,15 @@ class _DatabasePageState extends State<DatabasePage> {
     });
   }
 
+  Query where(
+    String field, {
+    dynamic isequalto,
+    dynamic isLessThan,
+    dynamic isGreaterThanOrEqualTo,
+    dynamic isGreaterThan,
+    dynamic arrayContains,
+    bool isNull,
+  }) {}
   @override
   void dispose() {
     super.dispose();
@@ -102,9 +112,10 @@ class _DatabasePageState extends State<DatabasePage> {
     });
 
     if (transactionResult.committed) {
-      _messagesRef.push().set(<String, String>{
-        _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot.value}'
-      });
+      _messagesRef.push().set(<String, String>{'Usuario': _kTestKey});
+      //_usersRef.push().set(<String, String>{'hola': 'mundo'});
+      //_usersRef.update(<String, String>{'MJQDQoZ2dh4eiKrDVZ2': 'world'});
+      //_usersRef.update(<String, String>{'adios2': 'world2'});
     } else {
       print('Transaction not committed.');
       if (transactionResult.error != null) {
@@ -121,18 +132,18 @@ class _DatabasePageState extends State<DatabasePage> {
       ),
       body: Column(
         children: <Widget>[
-          Flexible(
+          /* Flexible(
             child: Center(
-              child: _error == null
+                /*child: _error == null
                   ? Text(
-                      'Button tapped $_counter time${_counter == 1 ? '' : 's'}.\n\n'
+                      'hay $_counter registro${_counter == 1 ? '' : 's'}.\n\n'
                       'This includes all devices, ever.',
                     )
                   : Text(
                       'Error retrieving button tap count:\n${_error.message}',
-                    ),
-            ),
-          ),
+                    ),*/
+                ),
+          ),*/
           ListTile(
             leading: Checkbox(
               onChanged: (bool value) {
@@ -157,9 +168,59 @@ class _DatabasePageState extends State<DatabasePage> {
                 return SizeTransition(
                   sizeFactor: animation,
                   child: ListTile(
+                    leading: IconButton(
+                      onPressed: () => _messagesRef
+                          .child(snapshot.key)
+                          .update(<String, String>{'Usuario': _kTestKey}),
+                      icon: Icon(Icons.edit),
+                    ),
                     trailing: IconButton(
                       onPressed: () =>
                           _messagesRef.child(snapshot.key).remove(),
+                      icon: Icon(Icons.delete),
+                    ),
+
+                    //.update(<String, String>{'Usuario': _kTestKey}),
+
+                    title: Text(
+                      snapshot.value.toString(),
+                      //"${snapshot.value}sd",
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          TextField(
+            decoration: InputDecoration(
+              hintText: "Crear Usuario",
+              hintStyle:
+                  TextStyle(fontWeight: FontWeight.w300, color: Colors.pink),
+            ),
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.purple, fontWeight: FontWeight.w300),
+            cursorColor: Colors.purple,
+            cursorRadius: Radius.circular(16.0),
+            cursorWidth: 16.0,
+            onChanged: (texto) {
+              _kTestKey = texto;
+            },
+          ),
+          Flexible(
+            child: FirebaseAnimatedList(
+              key: ValueKey<bool>(_anchorToBottom),
+              query: _usersRef,
+              reverse: _anchorToBottom,
+              sort: _anchorToBottom
+                  ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
+                  : null,
+              itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                  Animation<double> animation, int index) {
+                return SizeTransition(
+                  sizeFactor: animation,
+                  child: ListTile(
+                    trailing: IconButton(
+                      onPressed: () => _usersRef.child(snapshot.key).remove(),
                       icon: Icon(Icons.delete),
                     ),
                     title: Text(

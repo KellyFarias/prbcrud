@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "625785704159",
+    "firebase_url": "https://prbcrud.firebaseio.com",
+    "project_id": "prbcrud",
+    "storage_bucket": "prbcrud.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625785704159:android:5e2b4e8f81c77094d0636a",
+        "android_client_info": {
+          "package_name": "com.example.prbcrud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625785704159-2sjolru14fps2e2s8qpagv6nbvq1lk4b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.prbcrud",
+            "certificate_hash": "e6fbf925024c7a978319883e4190657c5329150a"
+          }
+        },
+        {
+          "client_id": "625785704159-6e6g0bsm1niflvhs4s5e5o1nikbtk8mg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi28kXirLXlitVcDlmiWlCob7vghmefiw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625785704159-6e6g0bsm1niflvhs4s5e5o1nikbtk8mg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -19,14 +19,9 @@ class AddPage extends StatefulWidget {
 class _AddPage extends State<AddPage> {
   int _counter;
   DatabaseReference municipios;
-  DatabaseReference _counterRef;
-  DatabaseReference _messagesRef, _usersRef;
   StreamSubscription<Event> _counterSubscription;
   StreamSubscription<Event> _messagesSubscription;
   bool _anchorToBottom = false;
-
-  String _kTestKey = 'Hello';
-  String _kTestValue = 'world!', _search;
   String munClave,
       munNombre,
       munSignificado,
@@ -40,48 +35,17 @@ class _AddPage extends State<AddPage> {
   void initState() {
     super.initState();
     // Demonstrates configuring to the database using a file
-    _counterRef = FirebaseDatabase.instance.reference().child('counter');
     //_counterRef = FirebaseDatabase.instance.reference().child('municipios');
     // Demonstrates configuring the database directly
     final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
-    _messagesRef = database.reference().child('messages');
     municipios = database.reference().child('municipios');
-    _usersRef = database.reference().child('usuarios');
     database.reference().child('counter').once().then((DataSnapshot snapshot) {
       print('Connected to second database and read ${snapshot.value}');
     });
     database.setPersistenceEnabled(true);
     database.setPersistenceCacheSizeBytes(10000000);
-    _counterRef.keepSynced(true);
-    _counterSubscription = _counterRef.onValue.listen((Event event) {
-      setState(() {
-        _error = null;
-        _counter = event.snapshot.value ?? 0;
-      });
-    }, onError: (Object o) {
-      final DatabaseError error = o;
-      setState(() {
-        _error = error;
-      });
-    });
-    _messagesSubscription =
-        _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
-      print('Child added: ${event.snapshot.value}');
-    }, onError: (Object o) {
-      final DatabaseError error = o;
-      print('Error: ${error.code} ${error.message}');
-    });
   }
 
-  Query where(
-    String field, {
-    dynamic isequalto,
-    dynamic isLessThan,
-    dynamic isGreaterThanOrEqualTo,
-    dynamic isGreaterThan,
-    dynamic arrayContains,
-    bool isNull,
-  }) {}
   @override
   void dispose() {
     super.dispose();
@@ -92,7 +56,7 @@ class _AddPage extends State<AddPage> {
   Future<void> _increment() async {
     // Increment counter in transaction.
     final TransactionResult transactionResult =
-        await _counterRef.runTransaction((MutableData mutableData) async {
+        await municipios.runTransaction((MutableData mutableData) async {
       mutableData.value = (mutableData.value ?? 0) + 1;
       return mutableData;
     });
@@ -128,18 +92,6 @@ class _AddPage extends State<AddPage> {
       ),
       body: Column(
         children: <Widget>[
-          /* Flexible(
-            child: Center(
-                /*child: _error == null
-                  ? Text(
-                      'hay $_counter registro${_counter == 1 ? '' : 's'}.\n\n'
-                      'This includes all devices, ever.',
-                    )
-                  : Text(
-                      'Error retrieving button tap count:\n${_error.message}',
-                    ),*/
-                ),
-          ),*/
           Flexible(
             child: Center(
               child: Text('Ingrese los datos del municipio'),
@@ -253,7 +205,7 @@ class _AddPage extends State<AddPage> {
           Flexible(
             child: FirebaseAnimatedList(
               key: ValueKey<bool>(_anchorToBottom),
-              query: _usersRef,
+              //query: _usersRef,
               reverse: _anchorToBottom,
               sort: _anchorToBottom
                   ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
@@ -263,10 +215,6 @@ class _AddPage extends State<AddPage> {
                 return SizeTransition(
                   sizeFactor: animation,
                   child: ListTile(
-                    trailing: IconButton(
-                      onPressed: () => _usersRef.child(snapshot.key).remove(),
-                      icon: Icon(Icons.delete),
-                    ),
                     title: Text(
                       "$index: ${snapshot.value.toString()}",
                     ),
@@ -278,8 +226,8 @@ class _AddPage extends State<AddPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _increment,
-        tooltip: 'Increment',
+        //onPressed: _increment,
+        //tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
     );

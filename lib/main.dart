@@ -4,6 +4,7 @@ import 'package:flutter_signin_button/button_builder.dart';
 
 import './register_page.dart';
 import './signin_page.dart';
+import 'add_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,17 +20,12 @@ class AuthExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Firebase',
-        theme: ThemeData(
-       appBarTheme: AppBarTheme(
-     color: Colors.purple[300]
-  )),
+        theme: ThemeData(appBarTheme: AppBarTheme(color: Colors.purple[300])),
         home: Scaffold(
           body: AuthTypeSelector(),
         ));
   }
 }
-
-
 
 /// Provides a UI to select a authentication type page
 class AuthTypeSelector extends StatelessWidget {
@@ -49,7 +45,8 @@ class AuthTypeSelector extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Image.network('https://sites.google.com/site/pseparacioniii/_/rsrc/1530894838731/home/Logo-TecNM-2017.png'),
+          Image.network(
+              'https://sites.google.com/site/pseparacioniii/_/rsrc/1530894838731/home/Logo-TecNM-2017.png'),
           Container(
             child: SignInButtonBuilder(
               icon: Icons.person_add,
@@ -70,10 +67,18 @@ class AuthTypeSelector extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             alignment: Alignment.center,
           ),
+          Container(
+            child: SignInButtonBuilder(
+              icon: Icons.add_circle_outline,
+              backgroundColor: Colors.black,
+              text: 'Agregar',
+              onPressed: () => _pushPage(context, AddPage()),
+            ),
+            padding: const EdgeInsets.all(16),
+            alignment: Alignment.center,
+          )
         ],
       ),
     );
   }
 }
-
-
